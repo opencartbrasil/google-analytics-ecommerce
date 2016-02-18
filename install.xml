@@ -3,7 +3,7 @@
   <name>Integração com Google Analytics E-commerce.</name>
   <code>google-analytics-ecommerce</code>
   <version>1.0</version>
-  <author>Manoel Vidal</author>
+  <author>OpenCart Brasil</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="catalog/model/checkout/order.php">
     <operation>
