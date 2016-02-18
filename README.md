@@ -15,10 +15,6 @@ Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gr
  3. Na página do instalador, clique no botão Upload e selecione o arquivo 'google-analytics-ecommerce.ocmod.zip' (que você baixou deste repositório), e aguarde a conclusão da instalação automática.
  5. Após a instalação, acesse o menu Extensions->Modifications (Extensões->Modificações) e clique no botão Refresh (Atualizar), para que a modificação instalada seja incrementada na loja, lembrando que não é o botão "Atualizar" do navegador, e sim o botão "Atualizar" na cor azul ao lado do botão laranja e vermelho na tela do próprio OpenCart.
 
-### Desinstalar
-
-Para desinstalar a modificação, na administração da loja, acesse o menu Extensions->Modifications (Extensões->Modificações) e selecione a modificação com o nome 'Integração com Google Analytics E-commerce.', depois clique no botão Delete (Excluir), e no botão Refresh (Atualizar).
-
 ### Utilização
 
 Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu System->Settings (Configurações->Lojas), aba "Server" (Servidor), campo "Google Analytics Code" (Código do Google Analytics).
@@ -28,6 +24,14 @@ Para que você possa visualizar os dados dos pedidos enviados para o Google Anal
 Para visualizar os dados do pedido, acesse sua conta no Google Analytics e clique na aba "Relatórios", no menu "Conversões", submenu "Comércio Eletrônico".
 
 Observação: Leva em média 24 horas para que os dados enviados comecem a ser visualizados.
+
+### Desinstalação
+
+Para desinstalar a modificação, na administração da loja, acesse o menu Extensions->Modifications (Extensões->Modificações) e selecione a modificação com o nome 'Integração com Google Analytics E-commerce.', depois clique no botão Delete (Excluir), e no botão Refresh (Atualizar).
+
+### Atualização
+
+Acesse a administração da loja e execute o procedimento de Desinstalação, depois execute o procedimento de Instalação.
 
 ### Dúvidas
 
