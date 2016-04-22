@@ -99,7 +99,7 @@
 			if ($orderInfo) {
 				$data['gaTracking'] .= sprintf("ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'currency': '%s'});",
 													$orderInfo['order_id'],
-													$orderInfo['store_name'],
+													$this->db->escape($orderInfo['store_name']),
 													$orderInfo['total'],
 													$orderInfo['currency_code']
 													) . "\n";
@@ -107,9 +107,9 @@
 				foreach ($orderInfo['products'] as $product) {
 					$data['gaTracking'] .= sprintf("ga('ecommerce:addItem', {'id': '%s', 'name': '%s', 'sku': '%s', 'category': '%s', 'price': '%s', 'quantity': '%s', 'currency': '%s'});",
 														$orderInfo['order_id'],
-														$product['name'],
-														$product['sku'],
-														$product['category'],
+														$this->db->escape($product['name']),
+														$this->db->escape($product['sku']),
+														$this->db->escape($product['category']),
 														$product['price'],
 														$product['quantity'],
 														$orderInfo['currency_code']
