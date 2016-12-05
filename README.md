@@ -18,11 +18,11 @@ Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gr
 
 ### Utilização
 
-- No OpenCart até a versão 2.1.0.2:
+- No OpenCart até a versão 2.0.3.1:
 
 Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu System->Settings (Configurações->Lojas), aba "Server" (Servidor), campo "Google Analytics Code" (Código do Google Analytics).
 
-- No OpenCart na versão 2.2.0.0:
+- No OpenCart da versão 2.1.0.1 até 2.2.0.0:
 
 Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu Extension->Analytics (Extensões->Estatísticas), localize a extensão "Google Analytics", clique no botão "Instalar", depois no botão "Editar", preencha e habilite a extensão, e clique no botão "Salvar".
 
