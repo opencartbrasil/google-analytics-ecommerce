@@ -10,14 +10,27 @@ Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gr
 
 ### Instalação
 
- 1. Baixe a modificação no link: https://github.com/opencartbrasil/google-analytics-ecommerce/releases. Localize a versão mais atual e compatível do arquivo "google-analytics-ecommerce.ocmod.zip".
- 2. Na administração da loja acesse o menu Extensions->Extension Installer (Extensões->Instalador).
- 3. Na página do instalador, clique no botão Upload e selecione o arquivo 'google-analytics-ecommerce.ocmod.zip' (que você baixou deste repositório), e aguarde a conclusão da instalação automática.
- 5. Após a instalação, acesse o menu Extensions->Modifications (Extensões->Modificações) e clique no botão Refresh (Atualizar), para que a modificação instalada seja incrementada na loja, lembrando que não é o botão "Atualizar" do navegador, e sim o botão "Atualizar" na cor azul ao lado do botão laranja e vermelho na tela do próprio OpenCart.
+ 1. Acesse o link: https://github.com/opencartbrasil/google-analytics-ecommerce/releases.
+ 2. Localize a versão mais atual e compatível com sua versão do OpenCart, e faça o download do arquivo "google-analytics-ecommerce.ocmod.zip".
+ 3. Na administração da loja acesse o menu Extensions->Extension Installer (Extensões->Instalador).
+ 4. Na página do instalador, clique no botão Upload, selecione o arquivo 'google-analytics-ecommerce.ocmod.zip' (que você baixou deste repositório), e aguarde a conclusão da instalação automática.
+ 5. Após a instalação, acesse o menu Extensions->Modifications (Extensões->Modificações), e clique no botão Refresh (Atualizar), para que a modificação instalada seja incrementada na loja, lembrando que não é o botão "Atualizar" do navegador, e sim o botão "Atualizar" na cor azul ao lado do botão laranja e vermelho na tela do próprio OpenCart.
 
 ### Utilização
 
+- No OpenCart até a versão 2.1.0.2:
+
 Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu System->Settings (Configurações->Lojas), aba "Server" (Servidor), campo "Google Analytics Code" (Código do Google Analytics).
+
+- No OpenCart na versão 2.2.0.0:
+
+Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu Extension->Analytics (Extensões->Estatísticas), localize a extensão "Google Analytics", clique no botão "Instalar", depois no botão "Editar", preencha e habilite a extensão, e clique no botão "Salvar".
+
+- No OpenCart da versão 2.3.0.0 até 2.3.0.2:
+
+Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu Extension->Extension (Extensões->Extensões e filtre por Estatísticas), localize a extensão "Google Analytics", clique no botão "Instalar", depois no botão "Editar", preencha e habilite a extensão, e clique no botão "Salvar".
+
+#### Importante:
 
 Para que você possa visualizar os dados dos pedidos enviados para o Google Analytics, você deve habilitar o serviço de comércio eletrônico, para isso, acesse sua conta no Google Analytics e clique na aba "Administrador", no menu "Configurações de comércio eletrônico", e habilite o campo "Ativar comércio eletrônico".
 
@@ -27,7 +40,7 @@ Observação: Leva em média 24 horas para que os dados enviados comecem a ser v
 
 ### Desinstalação
 
-Para desinstalar a modificação, na administração da loja, acesse o menu Extensions->Modifications (Extensões->Modificações) e selecione a modificação com o nome 'Integração com Google Analytics E-commerce.', depois clique no botão Delete (Excluir), e no botão Refresh (Atualizar).
+Para desinstalar a modificação, na administração da loja, acesse o menu Extensions->Modifications (Extensões->Modificações),  localize e selecione a modificação com o nome 'Integração com Google Analytics E-commerce.', depois clique no botão Delete (Excluir), e no botão Refresh (Atualizar).
 
 ### Atualização
 
