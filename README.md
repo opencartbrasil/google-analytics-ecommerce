@@ -26,19 +26,19 @@ Para que as informações sejam enviadas ao Google Analytics, o código gerado e
 
 - No OpenCart da versão 2.1.0.1 até 2.2.0.0:
 
-Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu Extensões→Estatísticas (Extension→Analytics), localize a extensão "Google Analytics", clique no botão "Instalar" (Install), depois no botão "Editar" (Edit), adicione o código, habilite a extensão, e clique no botão "Salvar" (Save).
+Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu Extensões→Estatísticas (Extension→Analytics), localize a extensão "Google Analytics", clique no botão "Instalar" (Install), depois no botão "Editar" (Edit), adicione o código, habilite a extensão e clique no botão "Salvar" (Save).
 
 - No OpenCart da versão 2.3.0.0 até 3.0.x:
 
-Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu Extensões→Extensões e filtre por Estatísticas (Extension→Extension filter Analytics), localize a extensão "Google Analytics", clique no botão "Instalar" (Install), depois no botão "Editar" (Edit), adicione o código, habilite a extensão, e clique no botão "Salvar" (Save).
+Para que as informações sejam enviadas ao Google Analytics, o código gerado em sua conta no Google Analytics deve ser habilitado na loja através do menu Extensões→Extensões e filtre por Estatísticas (Extension→Extension filter Analytics), localize a extensão "Google Analytics", clique no botão "Instalar" (Install), depois no botão "Editar" (Edit), adicione o código, habilite a extensão e clique no botão "Salvar" (Save).
 
 #### Importante:
 
-Para que você possa visualizar os dados dos pedidos enviados para o Google Analytics, você deve habilitar o serviço de comércio eletrônico, para isso, acesse sua conta no Google Analytics e clique na aba "Administrador", no menu "Configurações de comércio eletrônico", e habilite o campo "Ativar comércio eletrônico".
+Para que você possa visualizar os dados dos pedidos enviados para o Google Analytics, você deve habilitar o serviço de Comércio Eletrônico, para isso, acesse sua conta no Google Analytics e clique na aba "Administrador", opção "VISTA DA PROPRIEDADE", menu "Visualizar configurações", submenu "Configurações de comércio eletrônico", e habilite o campo "Ativar comércio eletrônico".
 
-Para visualizar os dados do pedido, acesse sua conta no Google Analytics e clique na aba "Relatórios", no menu "Conversões", submenu "Comércio Eletrônico".
+Para visualizar os dados do pedido, acesse sua conta no Google Analytics, e em "Relatórios", clique no menu "Conversões", submenu "Comércio Eletrônico".
 
-Leva em média 24 horas para que os dados enviados comecem a ser visualizados.
+Leva em média 24 horas para que os dados enviados comecem a ser visualizados em sua conta.
 
 ### Desinstalação
 
