@@ -1,149 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-  <name>Integração com Google Analytics E-commerce</name>
+  <name>Google Analytics E-Commerce para OpenCart 2.x</name>
   <code>google-analytics-ecommerce</code>
-  <version>1.1</version>
+  <version>2.0.0</version>
   <author>OpenCart Brasil</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="catalog/model/checkout/order.php">
     <operation>
-      <search>
-        <![CDATA[
-    public function getOrder($order_id) {
-        ]]>
-      </search>
-      <add position="before">
-        <![CDATA[
-    public function getOrderGAC($order_id) {
-        $order_query = $this->db->query("SELECT o.order_id, o.store_name, o.language_id, o.currency_code, o.currency_value, o.total FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'");
+      <search><![CDATA[public function getOrder($order_id) {]]></search>
+      <add position="before"><![CDATA[
+        public function getOrderGAE($order_id) {
+            $order_query = $this->db->query("SELECT o.order_id, o.store_name, o.language_id, o.currency_code, o.currency_value, o.total FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'");
+            if ($order_query->num_rows) {
+                $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+                foreach ($order_product_query->rows as $product) {
+                    $language_id = $order_query->row['language_id'];
 
-        if ($order_query->num_rows) {
-            $language_id = $order_query->row['language_id'];
-            
-            $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+                    $i = 0;
+                    $category_data = '';
+                    $category_query = $this->db->query("SELECT cd.name FROM `" . DB_PREFIX . "product_to_category` pc INNER JOIN `" . DB_PREFIX . "category_description` cd ON pc.category_id = cd.category_id WHERE pc.product_id = '" . (int)$product['product_id'] . "' AND cd.language_id = '" . (int)$language_id . "'");
+                    foreach ($category_query->rows as $category) {
+                        $i++;
+                        if ($i <= 5) {
+                            $category_data .= $category['name'] . '/';
+                        }
+                    }
+                    $category_data = rtrim($category_data, '/');
 
-            foreach ($order_product_query->rows as $product) {
-                $option_data = '';
+                    $option_data = '';
+                    $order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$product['order_product_id'] . "'");
+                    foreach ($order_option_query->rows as $option) {
+                        if ($option['type'] != 'file') {
+                            $option_data .= $option['name'] . ': ' . (utf8_strlen($option['value']) > 20 ? utf8_substr($option['value'], 0, 20) . '..' : $option['value']) . ' - ';
+                        }
+                    }
+                    $option_data = rtrim($option_data, ' - ');
 
-                $order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$product['order_product_id'] . "'");
+                    if ($option_data) {
+                        $name = utf8_substr($product['name'] . ' - ' . $option_data, 0, 80);
+                    } else {
+                        $name = utf8_substr($product['name'], 0, 80);
+                    }
 
-                foreach ($order_option_query->rows as $option) {
-                    if ($option['type'] != 'file') {
-                        $option_data .= $option['name'] . ': ' . (utf8_strlen($option['value']) > 20 ? utf8_substr($option['value'], 0, 20) . '..' : $option['value']) . ' - ';
+                    $products[] = array(
+                        'name' => $name,
+                        'sku' => $product['model'],
+                        'category' => $category_data,
+                        'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_query->row['currency_code'], $order_query->row['currency_value'], false),
+                        'quantity' => $product['quantity']
+                    );
+                }
+
+                $order_shipping = 0;
+
+                $order_total_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
+
+                foreach ($order_total_query->rows as $total) {
+                    if ($total['value'] > 0) {
+                        if ($total['code'] == "shipping") {
+                            $order_shipping += $total['value'];
+                        }
                     }
                 }
 
-                $option_data = rtrim($option_data, ' - ');
-
-                $category_data = '';
-
-                $category_query = $this->db->query("SELECT cd.name FROM `" . DB_PREFIX . "product_to_category` pc INNER JOIN `" . DB_PREFIX . "category_description` cd ON pc.category_id = cd.category_id WHERE pc.product_id = '" . (int)$product['product_id'] . "' AND cd.language_id = '" . (int)$language_id . "'");
-
-                $i = 0;
-                foreach ($category_query->rows as $category) {
-                    $i++;
-                    if ($i <= 5) {
-                        $category_data .= $category['name'] . '/';
-                    }
-                }
-
-                $category_data = rtrim($category_data, '/');
-                
-                if ($option_data) {
-                    $name = utf8_substr($product['name'] . ' - ' . $option_data, 0, 80);
-                } else {
-                    $name = utf8_substr($product['name'], 0, 80);
-                }
-
-                $products[] = array(
-                    'name'     => $name,
-                    'sku'      => $product['model'],
-                    'category' => $category_data,
-                    'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_query->row['currency_code'], $order_query->row['currency_value']),
-                    'quantity' => $product['quantity']
+                return array(
+                    'order_id' => $order_query->row['order_id'],
+                    'store_name' => $order_query->row['store_name'],
+                    'products' => $products,
+                    'total' => $this->currency->format($order_query->row['total'], $order_query->row['currency_code'], $order_query->row['currency_value'], false),
+                    'shipping' => $this->currency->format($order_shipping, $order_query->row['currency_code'], $order_query->row['currency_value'], false),
+                    'currency_code' => $order_query->row['currency_code']
                 );
+            } else {
+                return false;
             }
-
-            return array(
-                'order_id'      => $order_query->row['order_id'],
-                'store_name'    => $order_query->row['store_name'],
-                'products'      => $products,
-                'total'         => $this->currency->format($order_query->row['total'], $order_query->row['currency_code'], $order_query->row['currency_value']),
-                'currency_code' => $order_query->row['currency_code']
-            );
-        } else {
-            return false;
-        }    
-    }
-        ]]>
-      </add>
+        }
+      ]]></add>
     </operation>
   </file>
-
   <file path="catalog/controller/checkout/success.php">
     <operation>
-      <search>
-        <![CDATA[
-        if (isset($this->session->data['order_id'])) {
-        ]]>
-      </search>
-      <add position="before">
-        <![CDATA[
+      <search><![CDATA[public function index() {]]></search>
+      <add position="after"><![CDATA[
         $data['gaTracking'] = '';
 
         if (isset($this->session->data['order_id'])) {
-            $this->load->model('checkout/order');
+            $ga = false;
 
-            $orderInfo  = $this->model_checkout_order->getOrderGAC($this->session->data['order_id']);
+            if ($this->config->get('google_analytics_status')) {
+                $ga = true;
+            } else if ($this->config->get('config_google_analytics_status')) {
+                $ga = true;
+            } else if (!empty($this->config->get('config_google_analytics'))) {
+                $ga = true;
+            }
 
-            if ($orderInfo) {
-                $data['gaTracking'] .= sprintf("ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'currency': '%s'});",
-                                                    $orderInfo['order_id'],
-                                                    $orderInfo['store_name'],
-                                                    $orderInfo['total'],
-                                                    $orderInfo['currency_code']
-                                                    ) . "\n";
-                $data['gaTracking'] = rtrim($data['gaTracking'], '\n');
-                foreach ($orderInfo['products'] as $product) {
-                    $data['gaTracking'] .= sprintf("ga('ecommerce:addItem', {'id': '%s', 'name': '%s', 'sku': '%s', 'category': '%s', 'price': '%s', 'quantity': '%s', 'currency': '%s'});",
-                                                        $orderInfo['order_id'],
-                                                        $product['name'],
-                                                        $product['sku'],
-                                                        $product['category'],
-                                                        $product['price'],
-                                                        $product['quantity'],
-                                                        $orderInfo['currency_code']
-                                                        ) . "\n";
+            if ($ga) {
+                $this->load->model('checkout/order');
+                $order_info = $this->model_checkout_order->getOrderGAE($this->session->data['order_id']);
+
+                if ($order_info) {
+                    $data['gaTracking'] .= sprintf("ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'shipping': '%s', 'currency': '%s'});", $order_info['order_id'], $order_info['store_name'], $order_info['total'], $order_info['shipping'], $order_info['currency_code']) . "\n";
+                    foreach ($order_info['products'] as $product) {
+                        $data['gaTracking'] .= sprintf("ga('ecommerce:addItem', {'id': '%s', 'name': '%s', 'sku': '%s', 'category': '%s', 'price': '%s', 'quantity': '%s', 'currency': '%s'});", $order_info['order_id'], $product['name'], $product['sku'], $product['category'], $product['price'], $product['quantity'], $order_info['currency_code']) . "\n";
+                    }
                 }
             }
         }
-        ]]>
-      </add>
+      ]]></add>
     </operation>
   </file>
-
   <file path="catalog/view/theme/*/template/common/success.tpl">
     <operation>
-      <search>
-        <![CDATA[
-<?php echo $footer; ?>
-        ]]>
-      </search>
-      <add position="before">
-        <![CDATA[
-<?php
-if(isset($gaTracking)) {
-if($gaTracking) {
-echo "<script>" . "\n";
-echo "ga('require', 'ecommerce');" . "\n";
-echo $gaTracking;
-echo "ga('ecommerce:send');" . "\n";
-echo "</script>" . "\n";
-}
-}
-?>
-        ]]>
-      </add>
+      <search><![CDATA[<?php echo $footer; ?>]]></search>
+      <add position="before"><![CDATA[<?php if ($gaTracking) { echo "<script>" . "\n" . "ga('require', 'ecommerce');" . "\n" . $gaTracking . "\n" . "ga('ecommerce:send');" . "\n" . "</script>" . "\n"; } ?>]]></add>
     </operation>
   </file>
 </modification>
