@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-  <name>Google Analytics E-Commerce para OpenCart 2.x</name>
+  <name>Google Analytics E-Commerce para OpenCart 3.x</name>
   <code>google-analytics-ecommerce</code>
-  <version>2.0.0</version>
+  <version>3.0.0</version>
   <author>OpenCart Brasil</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="catalog/model/checkout/order.php">
@@ -85,17 +85,7 @@
         $data['gaTracking'] = '';
 
         if (isset($this->session->data['order_id'])) {
-            $ga = false;
-
-            if ($this->config->get('google_analytics_status')) {
-                $ga = true;
-            } else if ($this->config->get('config_google_analytics_status')) {
-                $ga = true;
-            } else if (!empty($this->config->get('config_google_analytics'))) {
-                $ga = true;
-            }
-
-            if ($ga) {
+            if ($this->config->get('analytics_google_status')) {
                 $this->load->model('checkout/order');
                 $order_info = $this->model_checkout_order->getOrderGAE($this->session->data['order_id']);
 
@@ -110,10 +100,18 @@
       ]]></add>
     </operation>
   </file>
-  <file path="catalog/view/theme/*/template/common/success.tpl">
+  <file path="catalog/view/theme/*/template/common/success.twig">
     <operation>
-      <search><![CDATA[<?php echo $footer; ?>]]></search>
-      <add position="before"><![CDATA[<?php if ($gaTracking) { echo "<script>" . "\n" . "ga('require', 'ecommerce');" . "\n" . $gaTracking . "\n" . "ga('ecommerce:send');" . "\n" . "</script>" . "\n"; } ?>]]></add>
+      <search><![CDATA[{{ footer }}]]></search>
+      <add position="before"><![CDATA[
+{% if gaTracking %}
+<script>
+ga('require', 'ecommerce');
+{{ gaTracking }}
+ga('ecommerce:send');
+</script>
+{% endif %}
+      ]]></add>
     </operation>
   </file>
 </modification>
