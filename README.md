@@ -42,7 +42,7 @@ Leva em média 24 horas para que os dados enviados comecem a ser visualizados.
 
 ### Desinstalação
 
-Para desinstalar a modificação, na administração da loja, acesse o menu Extensões→Modificações (Extensions→Modifications),  localize e selecione a modificação com o nome 'Integração com Google Analytics E-commerce.', depois clique no botão Excluir (Delete), e no botão Atualizar (Refresh).
+Para desinstalar a modificação, na administração da loja, acesse o menu Extensões→Modificações (Extensions→Modifications),  localize e selecione a modificação com o nome 'Google Analytics E-commerce para OpenCart', depois clique no botão Excluir (Delete), e no botão Atualizar (Refresh).
 
 ### Atualização
 
@@ -53,14 +53,6 @@ Acesse a administração da loja e execute o procedimento de Desinstalação, de
 O OCMOD (OpenCart Modification) é nativo do OpenCart, ou seja, não é necessário instalar nenhum complemento no OpenCart para utilizar modificações ou extensões no formato OCMOD, para mais informações sobre o OCMOD, segue o link para mais informações:
 
 https://github.com/opencart/opencart/wiki/Modification-System
-
-### Os arquivos alterados virtualmente através do OCMOD são:
-
-catalog/model/checkout/order.php
-
-catalog/controller/checkout/success.php
-
-catalog/view/theme/*/template/common/success.tpl
 
 [licenca-badge]: https://img.shields.io/badge/licença-GPLv3-blue.svg
 [LICENSE]: ./LICENSE
