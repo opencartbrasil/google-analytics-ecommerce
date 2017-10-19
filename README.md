@@ -4,7 +4,7 @@
 
 Esta modificação foi desenvolvida no formato OCMOD, e habilita o envio dos dados do pedido para o Google Analytics E-commerce.
 
-As informações são geradas baseadas nos dados dos pedidos que são concluídos na loja, ou seja, que chegam a página de sucesso, porém, essas informações não são atualizadas para informar se o pedido foi pago.
+As informações são geradas baseadas nos dados dos pedidos que são concluídos na loja, sendo os dados enviados para o Google Analytics através da página de confirmação do pedido no checkout padrão do OpenCart.
 
 Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gratuito, clique no botão abaixo:
 
