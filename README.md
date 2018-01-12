@@ -6,14 +6,10 @@ Esta modificação foi desenvolvida no formato OCMOD, e habilita o envio dos dad
 
 As informações são geradas baseadas nos dados dos pedidos que são concluídos na loja, sendo os dados enviados para o Google Analytics através da página de confirmação do pedido no checkout padrão do OpenCart.
 
-Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gratuito, clique no botão abaixo:
-
-[![alt tag](https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7G9TR9PXS6G5J)
-
 ### Instalação
 
- 1. Acesse o link: https://github.com/opencartbrasil/google-analytics-ecommerce/releases.
- 2. Localize a versão mais atual e compatível com sua versão do OpenCart, e faça o download do arquivo "google-analytics-ecommerce.ocmod.zip".
+ 1. Acesse o link: https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=22039.
+ 2. Localize a versão mais atual e compatível com sua versão do OpenCart e faça o download.
  3. Na administração da loja acesse o menu Extensões→Instalador (Extensions→Installer).
  4. Na página do instalador, clique no botão Upload, selecione o arquivo 'google-analytics-ecommerce.ocmod.zip' (que você baixou deste repositório), e aguarde a conclusão da instalação automática.
  5. Após a instalação, acesse o menu Extensões→Modificações (Extensions→Modifications), e clique no botão Atualizar (Refresh), para que a modificação instalada seja incrementada na loja, lembrando que não é o botão "Atualizar" do navegador, e sim o botão "Atualizar" na cor azul ao lado do botão laranja e vermelho na tela do próprio OpenCart.
