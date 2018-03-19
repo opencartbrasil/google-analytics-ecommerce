@@ -2,7 +2,7 @@
 <modification>
   <name>Google Analytics E-Commerce para OpenCart 3.x</name>
   <code>google-analytics-ecommerce</code>
-  <version>3.0.0</version>
+  <version>3.1.0</version>
   <author>OpenCart Brasil</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="catalog/model/checkout/order.php">
@@ -12,10 +12,11 @@
         public function getOrderGAE($order_id) {
             $order_query = $this->db->query("SELECT o.order_id, o.store_name, o.language_id, o.currency_code, o.currency_value, o.total FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'");
             if ($order_query->num_rows) {
+                $language_id = $order_query->row['language_id'];
+                $currency_value = $order_query->row['currency_value'];
+
                 $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
                 foreach ($order_product_query->rows as $product) {
-                    $language_id = $order_query->row['language_id'];
-
                     $i = 0;
                     $category_data = '';
                     $category_query = $this->db->query("SELECT cd.name FROM `" . DB_PREFIX . "product_to_category` pc INNER JOIN `" . DB_PREFIX . "category_description` cd ON pc.category_id = cd.category_id WHERE pc.product_id = '" . (int)$product['product_id'] . "' AND cd.language_id = '" . (int)$language_id . "'");
@@ -35,7 +36,6 @@
                         }
                     }
                     $option_data = rtrim($option_data, ' - ');
-
                     if ($option_data) {
                         $name = utf8_substr($product['name'] . ' - ' . $option_data, 0, 80);
                     } else {
@@ -46,15 +46,13 @@
                         'name' => $name,
                         'sku' => $product['model'],
                         'category' => $category_data,
-                        'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_query->row['currency_code'], $order_query->row['currency_value'], false),
+                        'price' => (($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0)) * $currency_value),
                         'quantity' => $product['quantity']
                     );
                 }
 
                 $order_shipping = 0;
-
                 $order_total_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
-
                 foreach ($order_total_query->rows as $total) {
                     if ($total['value'] > 0) {
                         if ($total['code'] == "shipping") {
@@ -67,8 +65,8 @@
                     'order_id' => $order_query->row['order_id'],
                     'store_name' => $order_query->row['store_name'],
                     'products' => $products,
-                    'total' => $this->currency->format($order_query->row['total'], $order_query->row['currency_code'], $order_query->row['currency_value'], false),
-                    'shipping' => $this->currency->format($order_shipping, $order_query->row['currency_code'], $order_query->row['currency_value'], false),
+                    'total' => $order_query->row['total'] * $currency_value,
+                    'shipping' => $order_shipping * $currency_value,
                     'currency_code' => $order_query->row['currency_code']
                 );
             } else {
