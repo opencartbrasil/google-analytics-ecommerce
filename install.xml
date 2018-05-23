@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-  <name>Google Analytics E-Commerce para OpenCart 3.x</name>
+  <name>Google Analytics Comércio Eletrônico para OpenCart 3</name>
   <code>google-analytics-ecommerce</code>
-  <version>3.1.0</version>
+  <version>4.0.0</version>
   <author>OpenCart Brasil</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="catalog/model/checkout/order.php">
     <operation>
       <search><![CDATA[public function getOrder($order_id) {]]></search>
       <add position="before"><![CDATA[
-        public function getOrderGAE($order_id) {
+        public function getGTAG($order_id) {
             $order_query = $this->db->query("SELECT o.order_id, o.store_name, o.language_id, o.currency_code, o.currency_value, o.total FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'");
             if ($order_query->num_rows) {
                 $language_id = $order_query->row['language_id'];
@@ -20,8 +20,7 @@
                     $i = 0;
                     $category_data = '';
                     $category_query = $this->db->query("SELECT cd.name FROM `" . DB_PREFIX . "product_to_category` pc INNER JOIN `" . DB_PREFIX . "category_description` cd ON pc.category_id = cd.category_id WHERE pc.product_id = '" . (int)$product['product_id'] . "' AND cd.language_id = '" . (int)$language_id . "'");
-                    foreach ($category_query->rows as $category) {
-                        $i++;
+                    foreach ($category_query->rows as $category) { $i++;
                         if ($i <= 5) {
                             $category_data .= $category['name'] . '/';
                         }
@@ -36,16 +35,12 @@
                         }
                     }
                     $option_data = rtrim($option_data, ' - ');
-                    if ($option_data) {
-                        $name = utf8_substr($product['name'] . ' - ' . $option_data, 0, 80);
-                    } else {
-                        $name = utf8_substr($product['name'], 0, 80);
-                    }
 
                     $products[] = array(
-                        'name' => $name,
-                        'sku' => $product['model'],
+                        'id' => $product['model'],
+                        'name' => $product['name'],
                         'category' => $category_data,
+                        'variant' => $option_data,
                         'price' => (($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0)) * $currency_value),
                         'quantity' => $product['quantity']
                     );
@@ -62,12 +57,12 @@
                 }
 
                 return array(
-                    'order_id' => $order_query->row['order_id'],
-                    'store_name' => $order_query->row['store_name'],
-                    'products' => $products,
-                    'total' => $order_query->row['total'] * $currency_value,
+                    'transaction_id' => $order_query->row['order_id'],
+                    'affiliation' => $order_query->row['store_name'],
+                    'value' => $order_query->row['total'] * $currency_value,
+                    'currency' => $order_query->row['currency_code'],
                     'shipping' => $order_shipping * $currency_value,
-                    'currency_code' => $order_query->row['currency_code']
+                    'items' => $products
                 );
             } else {
                 return false;
@@ -80,18 +75,26 @@
     <operation>
       <search><![CDATA[public function index() {]]></search>
       <add position="after"><![CDATA[
-        $data['gaTracking'] = '';
+        $data['gtag_event'] = '';
 
         if (isset($this->session->data['order_id'])) {
             if ($this->config->get('analytics_google_status')) {
                 $this->load->model('checkout/order');
-                $order_info = $this->model_checkout_order->getOrderGAE($this->session->data['order_id']);
+                $event_info = $this->model_checkout_order->getGTAG($this->session->data['order_id']);
 
-                if ($order_info) {
-                    $data['gaTracking'] .= sprintf("ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'shipping': '%s', 'currency': '%s'});", $order_info['order_id'], $order_info['store_name'], $order_info['total'], $order_info['shipping'], $order_info['currency_code']) . "\n";
-                    foreach ($order_info['products'] as $product) {
-                        $data['gaTracking'] .= sprintf("ga('ecommerce:addItem', {'id': '%s', 'name': '%s', 'sku': '%s', 'category': '%s', 'price': '%s', 'quantity': '%s', 'currency': '%s'});", $order_info['order_id'], $product['name'], $product['sku'], $product['category'], $product['price'], $product['quantity'], $order_info['currency_code']) . "\n";
+                if ($event_info) {
+                    $data['gtag_event'] .= '<script>'."\n";
+                    $data['gtag_event'] .= 'gtag(\'event\', \'purchase\', {'."\n";
+                    $data['gtag_event'] .= sprintf('"transaction_id": "%s", "affiliation": "%s", "value": %s, "currency": "%s", "shipping": %s,', $event_info['transaction_id'], $event_info['affiliation'], $event_info['value'], $event_info['currency'], $event_info['shipping'])."\n";
+                    if (isset($event_info['items']) && is_array($event_info['items'])) {
+                        $data['gtag_event'] .= '"items": [ '."\n";
+                        foreach ($event_info['items'] as $item) {
+                            $data['gtag_event'] .= sprintf('{ "id": "%s", "name": "%s", "category": "%s", "variant": "%s", "quantity": %s, "price": "%s" },', $item['id'], $item['name'], $item['category'], $item['variant'], $item['quantity'], $item['price'])."\n";
+                        }
+                        $data['gtag_event'] .= ' ]'."\n";
                     }
+                    $data['gtag_event'] .= ' });'."\n";
+                    $data['gtag_event'] .= '</script>';
                 }
             }
         }
@@ -102,13 +105,7 @@
     <operation>
       <search><![CDATA[{{ footer }}]]></search>
       <add position="before"><![CDATA[
-{% if gaTracking %}
-<script>
-ga('require', 'ecommerce');
-{{ gaTracking }}
-ga('ecommerce:send');
-</script>
-{% endif %}
+{% if gtag_event %}{{ gtag_event }}{% endif %}
       ]]></add>
     </operation>
   </file>
